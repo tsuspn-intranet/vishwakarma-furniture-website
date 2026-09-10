@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vishwakarma Furniture &amp; Manufacturers — Solid Wood Beds, Built to Order</title>
+<meta name="description" content="Vishwakarma Furniture & Manufacturers — solid wood single and queen beds, built to order in Pune.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F1E6;
+    --bg-alt:#EDE3CE;
+    --card:#FBF8F1;
+    --ink:#241A10;
+    --ink-soft:#5A4C3B;
+    --wood:#7C4A24;
+    --wood-deep:#3A2414;
+    --brass:#AD7F35;
+    --teal:#1F5C52;
+    --teal-deep:#153F38;
+    --line:#DDCEA9;
+    --radius:3px;
+    --maxw:1160px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Work Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3{
+    font-family:'Fraunces', Georgia, 'Times New Roman', serif;
+    font-weight:600;
+    color:var(--ink);
+    margin:0 0 .5em;
+    line-height:1.15;
+    letter-spacing:-0.01em;
+  }
+
+  p{ margin:0 0 1em; max-width:62ch; color:var(--ink-soft); }
+
+  a{ color:inherit; }
+  img,svg{ display:block; max-width:100%; }
+
+  :focus-visible{
+    outline:3px solid var(--teal);
+    outline-offset:2px;
+  }
+
+  .container{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(246,241,230,0.92);
+    backdrop-filter:saturate(140%) blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+
+  .nav-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 24px;
+    max-width:var(--maxw);
+    margin:0 auto;
+  }
+
+  .brand{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:1.05rem;
+    letter-spacing:0.01em;
+    text-decoration:none;
+    color:var(--wood-deep);
+    line-height:1.2;
+  }
+  .brand span{
+    display:block;
+    font-family:'Work Sans', sans-serif;
+    font-weight:500;
+    font-size:0.68rem;
+    color:var(--brass);
+    letter-spacing:0.04em;
+    margin-top:2px;
+  }
+
+  nav.links{
+    display:flex;
+    gap:32px;
+    align-items:center;
+  }
+  nav.links a{
+    text-decoration:none;
+    font-size:0.95rem;
+    font-weight:500;
+    color:var(--ink);
+    padding:4px 0;
+    border-bottom:2px solid transparent;
+  }
+  nav.links a:hover{ border-bottom-color:var(--brass); }
+
+  .call-btn{
+    background:var(--wood-deep);
+    color:#fff !important;
+    padding:10px 18px;
+    border-radius:var(--radius);
+    text-decoration:none;
+    font-size:0.9rem;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .call-btn:hover{ background:var(--teal-deep); }
+
+  .menu-toggle{
+    display:none;
+    background:none;
+    border:1px solid var(--wood-deep);
+    border-radius:var(--radius);
+    padding:8px 10px;
+    cursor:pointer;
+  }
+  .menu-toggle span{
+    display:block;
+    width:20px;
+    height:2px;
+    background:var(--wood-deep);
+    margin:4px 0;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding:64px 0 72px;
+  }
+  .hero .container{
+    display:grid;
+    grid-template-columns:1.1fr 1fr;
+    gap:56px;
+    align-items:center;
+  }
+  .hero h1{
+    font-size:clamp(2.1rem, 3.4vw + 1rem, 3.1rem);
+    max-width:14ch;
+  }
+  .hero p.lead{
+    font-size:1.08rem;
+    max-width:46ch;
+  }
+  .hero-actions{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    margin-top:28px;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:13px 24px;
+    border-radius:var(--radius);
+    text-decoration:none;
+    font-weight:600;
+    font-size:0.95rem;
+    border:1px solid transparent;
+    cursor:pointer;
+    font-family:'Work Sans', sans-serif;
+  }
+  .btn-primary{ background:var(--teal); color:#fff; }
+  .btn-primary:hover{ background:var(--teal-deep); }
+  .btn-outline{ background:transparent; border-color:var(--wood-deep); color:var(--wood-deep); }
+  .btn-outline:hover{ background:var(--wood-deep); color:#fff; }
+
+  .hero-art{
+    background:var(--bg-alt);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+  }
+
+  /* ---------- Section headings ---------- */
+  .section{ padding:76px 0; }
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:24px;
+    margin-bottom:40px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:20px;
+  }
+  .section-head h2{ font-size:clamp(1.7rem, 1.6vw + 1rem, 2.2rem); margin:0; }
+  .section-head p{ margin:0; font-size:0.95rem; }
+
+  .alt{ background:var(--bg-alt); }
+
+  /* ---------- Products ---------- */
+  .products-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:32px;
+  }
+  .product-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-bottom:4px solid var(--wood);
+    display:flex;
+    flex-direction:column;
+  }
+  .product-art{
+    padding:28px 28px 0;
+  }
+  .product-body{
+    padding:24px 28px 28px;
+    display:flex;
+    flex-direction:column;
+    flex:1;
+  }
+  .product-body h3{ font-size:1.4rem; margin-bottom:8px; }
+  .product-body p{ font-size:0.95rem; }
+  .price-row{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    margin:14px 0 20px;
+  }
+  .price{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.6rem;
+    color:var(--wood-deep);
+  }
+  .price-note{ font-size:0.82rem; color:var(--ink-soft); }
+  .product-actions{
+    display:flex;
+    gap:10px;
+    margin-top:auto;
+    flex-wrap:wrap;
+  }
+  .product-actions .btn{ padding:11px 18px; font-size:0.9rem; }
+
+  /* ---------- About ---------- */
+  .about-grid{
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:56px;
+    align-items:start;
+  }
+  .practice-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    border-top:1px solid var(--line);
+  }
+  .practice-list li{
+    padding:16px 0;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    gap:16px;
+    align-items:baseline;
+  }
+  .practice-list .mark{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--brass);
+    flex:none;
+    margin-top:7px;
+  }
+  .practice-list strong{ display:block; font-size:1rem; color:var(--ink); }
+  .practice-list span{ font-size:0.9rem; color:var(--ink-soft); }
+
+  /* ---------- Contact ---------- */
+  .contact-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:56px;
+  }
+  .contact-list{
+    list-style:none;
+    padding:0;
+    margin:0 0 24px;
+  }
+  .contact-list li{
+    padding:14px 0;
+    border-bottom:1px solid var(--line);
+    display:grid;
+    grid-template-columns:110px 1fr;
+    gap:12px;
+    font-size:0.95rem;
+  }
+  .contact-list li span.label{ color:var(--ink-soft); font-size:0.85rem; }
+  .contact-list li a{ text-decoration:none; font-weight:600; }
+  .contact-list li a:hover{ color:var(--teal); }
+
+  .note-box{
+    background:var(--bg-alt);
+    border:1px solid var(--line);
+    padding:18px 20px;
+    font-size:0.88rem;
+    color:var(--ink-soft);
+  }
+  .note-box strong{ color:var(--ink); }
+
+  /* ---------- Footer ---------- */
+  footer{
+    background:var(--wood-deep);
+    color:#EFE6D6;
+    padding:40px 0 28px;
+  }
+  footer .container{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:16px;
+  }
+  footer .brand{ color:#fff; }
+  footer .brand span{ color:#D8B97A; }
+  footer p{ margin:0; color:#C8BBA0; font-size:0.85rem; }
+
+  /* ---------- WhatsApp float ---------- */
+  .wa-float{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    z-index:60;
+    background:#1F5C52;
+    color:#fff;
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    box-shadow:0 6px 18px rgba(0,0,0,0.25);
+  }
+  .wa-float:hover{ background:var(--teal-deep); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 880px){
+    nav.links{ display:none; }
+    .menu-toggle{ display:block; }
+    .hero .container{ grid-template-columns:1fr; }
+    .hero-art{ order:-1; }
+    .products-grid{ grid-template-columns:1fr; }
+    .about-grid{ grid-template-columns:1fr; }
+    .contact-grid{ grid-template-columns:1fr; }
+  }
+
+  nav.links.open{
+    display:flex;
+    position:absolute;
+    top:100%;
+    left:0;
+    right:0;
+    background:var(--bg);
+    flex-direction:column;
+    gap:0;
+    border-bottom:1px solid var(--line);
+    padding:8px 24px 16px;
+  }
+  nav.links.open a{ padding:12px 0; border-bottom:1px solid var(--line); width:100%; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-row">
+    <a class="brand" href="#top">VISHWAKARMA
+      <span>FURNITURE &amp; MANUFACTURERS</span>
+    </a>
+    <nav class="links" id="navLinks">
+      <a href="#top">Home</a>
+      <a href="#products">Beds</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <a class="call-btn" href="tel:9270785282">Call the workshop</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="container">
+      <div>
+        <h1>Every joint cut by hand, built to outlast the room around it.</h1>
+        <!-- EDIT: replace with copy that matches your shop's real story -->
+        <p class="lead">Vishwakarma Furniture &amp; Manufacturers builds solid-wood beds to order in Pune — no MDF, no shortcuts. Tell us the size and wood, we cut and join the rest by hand.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#products">View beds</a>
+          <a class="btn btn-outline" href="#contact">Talk to us</a>
+        </div>
+      </div>
+
+      <div class="hero-art" aria-hidden="true">
+        <svg viewBox="0 0 560 420" role="img" aria-label="Illustration of a wooden bed frame">
+          <rect x="0" y="0" width="560" height="420" fill="none"/>
+          <!-- grain background -->
+          <g stroke="#DDCEA9" stroke-width="1" opacity="0.6">
+            <path d="M0 40 C 140 20, 420 60, 560 30" fill="none"/>
+            <path d="M0 90 C 160 70, 400 110, 560 80" fill="none"/>
+            <path d="M0 360 C 150 340, 410 380, 560 350" fill="none"/>
+          </g>
+          <!-- headboard -->
+          <rect x="70" y="70" width="30" height="230" rx="2" fill="#7C4A24"/>
+          <rect x="80" y="90" width="10" height="190" fill="#5C371B"/>
+          <!-- mattress base -->
+          <rect x="70" y="230" width="420" height="34" rx="2" fill="#AD7F35"/>
+          <!-- legs -->
+          <rect x="85" y="264" width="14" height="46" fill="#3A2414"/>
+          <rect x="465" y="264" width="14" height="46" fill="#3A2414"/>
+          <!-- mattress -->
+          <rect x="78" y="196" width="404" height="42" rx="6" fill="#FBF8F1" stroke="#DDCEA9"/>
+          <!-- pillow -->
+          <rect x="98" y="150" width="120" height="56" rx="14" fill="#FBF8F1" stroke="#DDCEA9"/>
+          <!-- quilt -->
+          <path d="M78 196 L482 196 L482 238 Q 280 250 78 238 Z" fill="#1F5C52" opacity="0.85"/>
+          <g stroke="#153F38" stroke-width="1.5" opacity="0.5">
+            <path d="M150 196 L150 235" />
+            <path d="M230 196 L230 240" />
+            <path d="M310 196 L310 240" />
+            <path d="M390 196 L390 238" />
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PRODUCTS ================= -->
+  <section class="section alt" id="products">
+    <div class="container">
+      <div class="section-head">
+        <h2>Beds, made to order</h2>
+        <p>Pick a size below, choose your wood on WhatsApp, and pay online to confirm your order.</p>
+      </div>
+
+      <div class="products-grid">
+
+        <!-- Single Bed -->
+        <article class="product-card">
+          <div class="product-art">
+            <svg viewBox="0 0 300 140" role="img" aria-label="Illustration of a single bed">
+              <rect x="10" y="20" width="18" height="90" rx="2" fill="#7C4A24"/>
+              <rect x="28" y="80" width="240" height="20" fill="#AD7F35"/>
+              <rect x="22" y="52" width="180" height="30" rx="6" fill="#FBF8F1" stroke="#DDCEA9"/>
+              <path d="M22 82 L262 82 L262 100 Q 140 106 22 100 Z" fill="#1F5C52" opacity="0.85"/>
+              <rect x="20" y="100" width="10" height="26" fill="#3A2414"/>
+              <rect x="258" y="100" width="10" height="26" fill="#3A2414"/>
+            </svg>
+          </div>
+          <div class="product-body">
+            <h3>Single Bed</h3>
+            <!-- EDIT: confirm dimensions, wood options and finish -->
+            <p>A solid-wood single bed frame built to your mattress size — sheesham, mango or teak, with an option for under-bed storage.</p>
+            <div class="price-row">
+              <span class="price" id="priceSingle">₹14,999</span>
+              <span class="price-note">onwards, wood &amp; finish dependent</span>
+            </div>
+            <div class="product-actions">
+              <button class="btn btn-primary" onclick="payNow('single')">Pay online to book</button>
+              <a class="btn btn-outline" id="waSingle" href="#" target="_blank" rel="noopener">Ask on WhatsApp</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Queen Bed -->
+        <article class="product-card">
+          <div class="product-art">
+            <svg viewBox="0 0 300 140" role="img" aria-label="Illustration of a queen bed">
+              <rect x="10" y="14" width="18" height="102" rx="2" fill="#7C4A24"/>
+              <rect x="28" y="86" width="260" height="20" fill="#AD7F35"/>
+              <rect x="22" y="52" width="110" height="34" rx="6" fill="#FBF8F1" stroke="#DDCEA9"/>
+              <rect x="140" y="52" width="110" height="34" rx="6" fill="#FBF8F1" stroke="#DDCEA9"/>
+              <path d="M22 88 L282 88 L282 106 Q 150 112 22 106 Z" fill="#1F5C52" opacity="0.85"/>
+              <rect x="20" y="106" width="10" height="26" fill="#3A2414"/>
+              <rect x="278" y="106" width="10" height="26" fill="#3A2414"/>
+            </svg>
+          </div>
+          <div class="product-body">
+            <h3>Queen Bed</h3>
+            <!-- EDIT: confirm dimensions, wood options and finish -->
+            <p>A queen-size frame with a reinforced centre rail for daily use, panelled or upholstered headboard, finished in the stain of your choice.</p>
+            <div class="price-row">
+              <span class="price" id="priceQueen">₹27,999</span>
+              <span class="price-note">onwards, wood &amp; finish dependent</span>
+            </div>
+            <div class="product-actions">
+              <button class="btn btn-primary" onclick="payNow('queen')">Pay online to book</button>
+              <a class="btn btn-outline" id="waQueen" href="#" target="_blank" rel="noopener">Ask on WhatsApp</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section class="section" id="about">
+    <div class="container about-grid">
+      <div>
+        <h2>Built the way furniture used to be built</h2>
+        <!-- EDIT: rewrite to reflect your shop's real history and workshop -->
+        <p>Vishwakarma Furniture &amp; Manufacturers takes its name from the craftsman's patron — a fitting start for a workshop that still measures, cuts and joins every bed by hand. We work in solid wood, to the sizes our customers actually need, rather than mass-producing a fixed catalogue.</p>
+        <p>If you already know your wood, size and finish, you can book a bed directly below. If not, message us on WhatsApp and we'll help you decide before anything is cut.</p>
+      </div>
+      <ul class="practice-list">
+        <li><span class="mark"></span><div><strong>Solid wood only</strong><span>No MDF or particle board in the frame.</span></div></li>
+        <li><span class="mark"></span><div><strong>Built to your size</strong><span>Standard single and queen, or custom dimensions on request.</span></div></li>
+        <li><span class="mark"></span><div><strong>Finished by hand</strong><span>Staining and polish done in-house before delivery.</span></div></li>
+        <li><span class="mark"></span><div><strong>Pune delivery</strong><span>Local delivery and assembly available.</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= CONTACT ================= -->
+  <section class="section alt" id="contact">
+    <div class="container contact-grid">
+      <div>
+        <h2>Get in touch</h2>
+        <p>For custom sizes, wood samples or delivery timelines, WhatsApp or call the workshop directly.</p>
+        <ul class="contact-list">
+          <li><span class="label">Phone</span><a href="tel:9270785282">9270785282</a></li>
+          <li><span class="label">WhatsApp</span><a id="waMain" href="#" target="_blank" rel="noopener">9270785282</a></li>
+          <li><span class="label">Email</span><a href="mailto:mangeshatt@gmail.com">info@vishwakarmafurniture.example</a></li>
+          <li><span class="label">Workshop</span><span>Pune, Maharashtra — address on request</span></li>
+        </ul>
+      </div>
+      <div class="note-box">
+        <strong>Before this site goes live:</strong> the phone number, WhatsApp number, email, address and bed prices on this page are placeholders. They're marked with <code>EDIT</code> comments in the code and gathered in one place near the top of the script — swap them for your real details, and add your live Razorpay key, before sharing the link with customers.
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <a class="brand" href="#top">VISHWAKARMA<span>FURNITURE &amp; MANUFACTURERS</span></a>
+    <p>&copy; <span id="year"></span> Vishwakarma Furniture &amp; Manufacturers, Pune.</p>
+  </div>
+</footer>
+
+<a class="wa-float" id="waFloat" href="#" target="_blank" rel="noopener" aria-label="Message us on WhatsApp">
+  <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff" aria-hidden="true">
+    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.42a9.9 9.9 0 0 0 4.62 1.14h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2Zm5.8 14.12c-.24.68-1.4 1.32-1.93 1.4-.49.08-1.1.11-1.78-.11-.41-.13-.94-.3-1.62-.6-2.85-1.23-4.7-4.1-4.85-4.29-.14-.19-1.16-1.54-1.16-2.94s.73-2.09.98-2.37c.25-.28.55-.35.74-.35h.53c.17 0 .4-.03.62.47.24.56.81 1.94.88 2.08.07.14.11.3.02.49-.1.19-.15.3-.29.46-.15.17-.31.37-.44.5-.15.14-.3.3-.13.6.17.28.76 1.26 1.63 2.04 1.12 1 2.06 1.31 2.35 1.46.29.14.46.12.63-.07.17-.19.71-.83.9-1.11.19-.28.38-.24.63-.14.26.09 1.63.77 1.91.91.28.14.46.21.53.33.07.12.07.68-.17 1.36Z"/>
+  </svg>
+</a>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  /* =========================================================
+     SETUP — everything you need to edit before going live
+     ========================================================= */
+
+  // 1. Your Razorpay Key ID (public). Get it from Razorpay Dashboard > Settings > API Keys.
+  //    Use a rzp_test_... key while testing, switch to rzp_live_... when ready.
+  const RAZORPAY_KEY_ID = "rzp_test_XXXXXXXXXXXXXX"; // EDIT
+
+  // 2. Shop details
+  const SHOP = {
+    name: "VISHWAKARMA FURNITURE & MANUFACTURERS",
+    whatsappNumber: "9270785282" // EDIT — country code + number, no spaces or plus sign
+  };
+
+  // 3. Products and prices. Amounts are in paise (₹1 = 100 paise).
+  const PRODUCTS = {
+    single: { name: "Single Bed", amountPaise: 1499900, displayPrice: "₹14,999" }, // EDIT
+    queen:  { name: "Queen Bed",  amountPaise: 2799900, displayPrice: "₹27,999" }  // EDIT
+  };
+
+  /* =========================================================
+     Page wiring — shouldn't need to touch this
+     ========================================================= */
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  function waLink(productName){
+    const text = productName
+      ? `Hi, I'm interested in the ${productName} on your website.`
+      : `Hi, I'd like to know more about your furniture.`;
+    return `https://wa.me/${SHOP.whatsappNumber}?text=${encodeURIComponent(text)}`;
+  }
+  document.getElementById('waSingle').href = waLink(PRODUCTS.single.name);
+  document.getElementById('waQueen').href = waLink(PRODUCTS.queen.name);
+  document.getElementById('waMain').href = waLink();
+  document.getElementById('waFloat').href = waLink();
+  document.getElementById('waMain').textContent = '+' + SHOP.whatsappNumber.replace(/^91/, '91 ');
+
+  const menuToggle = document.getElementById('menuToggle');
+  const navLinks = document.getElementById('navLinks');
+  menuToggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    menuToggle.setAttribute('aria-expanded', String(isOpen));
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+  }));
+
+  function payNow(productKey){
+    const product = PRODUCTS[productKey];
+    if (!product) return;
+
+    if (typeof Razorpay === 'undefined') {
+      alert('Payment couldn\'t load. Check your internet connection and try again.');
+      return;
+    }
+
+    const options = {
+      key: RAZORPAY_KEY_ID,
+      amount: product.amountPaise,
+      currency: "INR",
+      name: SHOP.name,
+      description: product.name,
+      handler: function (response){
+        alert(
+          "Payment received. Payment ID: " + response.razorpay_payment_id +
+          "\n\nWe'll message you on WhatsApp shortly to confirm wood, size and delivery."
+        );
+        // NOTE: this confirms the payment popup succeeded. To be fully sure funds
+        // were captured before treating an order as confirmed, verify the payment
+        // server-side (Razorpay's payment.captured webhook or the Payments API)
+        // rather than relying on this browser-side callback alone.
+      },
+      modal: {
+        ondismiss: function(){ /* user closed the payment window without paying */ }
+      },
+      notes: { product: product.name },
+      theme: { color: "#1F5C52" }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', function (response){
+      alert("Payment failed: " + response.error.description);
+    });
+    rzp.open();
+  }
+</script>
+
+</body>
+</html>
