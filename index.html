@@ -460,6 +460,9 @@
 <body>
 
 <header>
+  <div id="testModeBanner" style="display:none; background:var(--brass); color:#241A10; text-align:center; font-size:0.8rem; font-weight:600; padding:6px 12px;">
+    Test mode — payments are simulated, no real money is charged. Switch to a live key before sharing this site.
+  </div>
   <div class="nav-row">
     <a class="brand" href="#top">VISHWAKARMA
       <span>FURNITURE &amp; MANUFACTURERS</span>
@@ -560,7 +563,7 @@
               <span class="price-note">onwards, wood &amp; finish dependent</span>
             </div>
             <div class="product-actions">
-              <button class="btn btn-primary" onclick="payNow('single')">Pay online to book</button>
+              <button class="btn btn-primary" onclick="payNow('single', this)">Pay online to book</button>
               <a class="btn btn-outline" id="waSingle" href="#" target="_blank" rel="noopener">Ask on WhatsApp</a>
             </div>
           </div>
@@ -588,7 +591,7 @@
               <span class="price-note">onwards, wood &amp; finish dependent</span>
             </div>
             <div class="product-actions">
-              <button class="btn btn-primary" onclick="payNow('queen')">Pay online to book</button>
+              <button class="btn btn-primary" onclick="payNow('queen', this)">Pay online to book</button>
               <a class="btn btn-outline" id="waQueen" href="#" target="_blank" rel="noopener">Ask on WhatsApp</a>
             </div>
           </div>
@@ -637,8 +640,8 @@
         <button type="submit" class="btn btn-primary" onclick="payCustomAmount()">Pay this amount</button>
       </form>
 
-      <!-- EDIT: this note explains the optional server-side order API — remove once ORDER_API_URL is set up, or delete this paragraph if you're staying with client-side-only payments -->
-      <p class="pay-note">Payments here work the same way as the bed payments above: they open Razorpay Checkout directly in the browser. If you set up <code>ORDER_API_URL</code> in the script (a small server endpoint that creates the Razorpay order first), this form — and the bed buttons — will automatically use it instead, which is the safer setup Razorpay recommends for verifying the exact amount charged.</p>
+      <!-- EDIT: this note explains the optional server-side order API — trim it down once ORDER_API_URL / VERIFY_API_URL are set up, or delete it if you're staying with client-side-only payments -->
+      <p class="pay-note">Payments here work the same way as the bed payments above: they open Razorpay Checkout directly in the browser. Setting <code>ORDER_API_URL</code> and <code>VERIFY_API_URL</code> in the script (see <code>razorpay-server-example.js</code>) makes this form — and the bed buttons — create and verify the payment server-side automatically, which is the setup Razorpay recommends so amounts can't be altered in the browser before checkout opens.</p>
     </div>
   </section>
 
@@ -674,7 +677,7 @@
         </ul>
       </div>
       <div class="note-box">
-        <strong>Before this site goes live:</strong> the phone number, WhatsApp number, email, address and bed prices on this page are placeholders. They're marked with <code>EDIT</code> comments in the code and gathered in one place near the top of the script — swap them for your real details, and add your live Razorpay key, before sharing the link with customers.
+        <strong>Before this site goes live:</strong> the phone number, WhatsApp number, email, address and bed prices on this page are placeholders, and <code>RAZORPAY_KEY_ID</code> is blank — every "Pay" button will show a clear message instead of opening until it's filled in. All of these are marked with <code>EDIT</code> comments and gathered near the top of the script. Start with a <code>rzp_test_…</code> key to test end-to-end (you'll see a "Test mode" banner as a reminder), then switch to your <code>rzp_live_…</code> key before sharing the link with customers. For real order amounts to be tamper-proof, also set up <code>ORDER_API_URL</code> and <code>VERIFY_API_URL</code> using the companion server example.
       </div>
     </div>
   </section>
@@ -694,7 +697,10 @@
   </svg>
 </a>
 
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script
+  src="https://checkout.razorpay.com/v1/checkout.js"
+  onerror="window.__RAZORPAY_SCRIPT_FAILED__ = true;"
+></script>
 <script>
   /* =========================================================
      SETUP — everything you need to edit before going live
@@ -702,7 +708,9 @@
 
   // 1. Your Razorpay Key ID (public). Get it from Razorpay Dashboard > Settings > API Keys.
   //    Use a rzp_test_... key while testing, switch to rzp_live_... when ready.
-  const RAZORPAY_KEY_ID = ""; // EDIT
+  //    IMPORTANT: this MUST be filled in or every "Pay" button will stop with a clear
+  //    message instead of opening — that message is expected until you set this.
+  const RAZORPAY_KEY_ID = ""; // EDIT — e.g. "rzp_test_AbCd1234EfGh56"
 
   // 2. Shop details
   const SHOP = {
@@ -725,8 +733,17 @@
   //    order id) created via the Razorpay Orders API using your KEY SECRET (never put
   //    the key secret in this file). This lets Razorpay verify server-side that the
   //    amount charged matches what you intended, which is the setup Razorpay recommends
-  //    for anything beyond quick testing.
+  //    before taking this live. A ready-to-run example server (Node/Express) that
+  //    implements this endpoint is provided separately — see razorpay-server-example.js.
   const ORDER_API_URL = ""; // EDIT (optional) — e.g. "https://your-server.example.com/create-razorpay-order"
+
+  // 5. Optional: server endpoint that verifies a completed payment's signature.
+  //    Pairs with ORDER_API_URL — only used when a payment was made against a
+  //    server-created order. Leave blank to skip server-side verification (the page
+  //    will treat a successful Razorpay popup as confirmation, as it always did).
+  //    Expects a POST body of { razorpay_order_id, razorpay_payment_id, razorpay_signature }
+  //    and a JSON response of { verified: true | false }.
+  const VERIFY_API_URL = ""; // EDIT (optional) — e.g. "https://your-server.example.com/verify-razorpay-payment"
 
   /* =========================================================
      Page wiring — shouldn't need to touch this
@@ -757,6 +774,37 @@
     menuToggle.setAttribute('aria-expanded', 'false');
   }));
 
+  // Was the Razorpay checkout.js script able to load? Computed once, right after
+  // the <script src="https://checkout.razorpay.com/v1/checkout.js"> tag above
+  // has had its chance to run — window.Razorpay only exists if it succeeded.
+  const razorpayScriptLoaded = (typeof Razorpay !== 'undefined') && !window.__RAZORPAY_SCRIPT_FAILED__;
+
+  // Prevents two checkout windows from being opened at once (e.g. a fast
+  // double-click, or clicking a second "Pay" button while the first is
+  // still preparing).
+  let checkoutInProgress = false;
+
+  // Show a small reminder banner if a test key is detected, so a live launch
+  // doesn't accidentally stay in test mode.
+  (function flagTestMode(){
+    if (RAZORPAY_KEY_ID && RAZORPAY_KEY_ID.indexOf('rzp_test_') === 0) {
+      const banner = document.getElementById('testModeBanner');
+      if (banner) banner.style.display = 'block';
+    }
+  })();
+
+  function setButtonBusy(button, busyText){
+    if (!button) return;
+    if (busyText){
+      button.disabled = true;
+      button.dataset.origText = button.dataset.origText || button.textContent;
+      button.textContent = busyText;
+    } else {
+      button.disabled = false;
+      button.textContent = button.dataset.origText || button.textContent;
+    }
+  }
+
   // Asks ORDER_API_URL to create a Razorpay order server-side, if configured.
   // Returns the order id, or null if no server is set up (or the call fails) —
   // in which case checkout falls back to the plain client-side amount, exactly
@@ -778,63 +826,141 @@
     }
   }
 
+  // Asks VERIFY_API_URL to check a completed payment's signature, if configured.
+  // Returns true/false, or null if verification isn't set up (nothing to check against).
+  async function verifyPaymentServerSide(response){
+    if (!VERIFY_API_URL) return null;
+    try {
+      const res = await fetch(VERIFY_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature
+        })
+      });
+      if (!res.ok) throw new Error('Verify API responded with status ' + res.status);
+      const data = await res.json();
+      return !!data.verified;
+    } catch (err){
+      console.error('Payment verification call failed:', err);
+      return null; // treat as "couldn't confirm", not as "failed" — the payment itself may still be genuine
+    }
+  }
+
+  async function handlePaymentSuccess(response){
+    // razorpay_order_id / razorpay_signature are only present when checkout was
+    // opened against a server-created order (ORDER_API_URL configured). Without
+    // them there's nothing to verify server-side, so this simply trusts the
+    // popup's success callback, same as this page always did.
+    if (VERIFY_API_URL && response.razorpay_order_id && response.razorpay_signature) {
+      const verified = await verifyPaymentServerSide(response);
+      if (verified === false) {
+        alert(
+          "We couldn't confirm this payment automatically (Payment ID: " + response.razorpay_payment_id + ").\n\n" +
+          "Please don't worry if money was deducted — message us on WhatsApp with this Payment ID and we'll verify it manually."
+        );
+        return;
+      }
+      // verified === true, or === null (verification service unreachable — payment
+      // itself already succeeded per Razorpay, so still confirm to the customer)
+    }
+    alert(
+      "Payment received. Payment ID: " + response.razorpay_payment_id +
+      "\n\nWe'll message you on WhatsApp shortly to confirm the details."
+    );
+  }
+
   // Shared checkout opener used by both the bed "Pay online to book" buttons
   // and the "Pay any amount" form below.
   async function openRazorpayCheckout({ description, amountPaise, notes, payButton }){
-    if (typeof Razorpay === 'undefined') {
-      alert('Payment couldn\'t load. Check your internet connection and try again.');
+    if (checkoutInProgress) return; // ignore rapid double-clicks
+
+    if (!RAZORPAY_KEY_ID) {
+      alert(
+        "Online payment isn't set up on this site yet.\n\n" +
+        "Please contact us on WhatsApp or call " + SHOP.whatsappNumber + " and we'll take it from there."
+      );
+      console.error('RAZORPAY_KEY_ID is blank — set it in the script before accepting payments.');
       return;
     }
-    if (!amountPaise || amountPaise < 100) {
+    if (!razorpayScriptLoaded) {
+      alert(
+        "Payment couldn't load — this is usually a network issue or an ad-blocker.\n\n" +
+        "Please refresh the page and try again, or contact us on WhatsApp instead."
+      );
+      return;
+    }
+    if (!amountPaise || !Number.isFinite(amountPaise) || amountPaise < 100) {
       alert('Enter an amount of at least ₹1.');
       return;
     }
-
-    if (payButton) { payButton.disabled = true; payButton.dataset.origText = payButton.textContent; payButton.textContent = 'Opening payment…'; }
-    const orderId = await createServerOrderId(amountPaise, notes);
-    if (payButton) { payButton.disabled = false; payButton.textContent = payButton.dataset.origText; }
-
-    const options = {
-      key: RAZORPAY_KEY_ID,
-      amount: amountPaise,
-      currency: "INR",
-      name: SHOP.name,
-      description: description,
-      handler: function (response){
-        alert(
-          "Payment received. Payment ID: " + response.razorpay_payment_id +
-          "\n\nWe'll message you on WhatsApp shortly to confirm the details."
-        );
-        // NOTE: this confirms the payment popup succeeded. To be fully sure funds
-        // were captured before treating an order as confirmed, verify the payment
-        // server-side (Razorpay's payment.captured webhook or the Payments API)
-        // rather than relying on this browser-side callback alone.
-      },
-      modal: {
-        ondismiss: function(){ /* user closed the payment window without paying */ }
-      },
-      notes: notes || {},
-      theme: { color: "#1F5C52" }
-    };
-
-    if (orderId) {
-      options.order_id = orderId; // server-verified order — takes precedence over "amount" above
+    if (amountPaise > 10000000000) { // ₹1,00,00,000 — sanity ceiling against typos, not a business limit
+      alert('That amount looks unusually large — please double-check it, or contact us directly for large payments.');
+      return;
     }
 
-    const rzp = new Razorpay(options);
-    rzp.on('payment.failed', function (response){
-      alert("Payment failed: " + response.error.description);
-    });
-    rzp.open();
+    checkoutInProgress = true;
+    setButtonBusy(payButton, 'Opening payment…');
+
+    try {
+      const orderId = await createServerOrderId(amountPaise, notes);
+
+      const options = {
+        key: RAZORPAY_KEY_ID,
+        amount: amountPaise,
+        currency: "INR",
+        name: SHOP.name,
+        description: description,
+        handler: function (response){
+          handlePaymentSuccess(response);
+          // NOTE: the handler firing confirms the payment popup succeeded. Without
+          // VERIFY_API_URL configured above, that's taken on trust, same as this
+          // page always did — set up ORDER_API_URL + VERIFY_API_URL for server-side
+          // confirmation before relying on this for real order fulfilment.
+        },
+        modal: {
+          ondismiss: function(){
+            checkoutInProgress = false;
+            setButtonBusy(payButton, null);
+          }
+        },
+        notes: notes || {},
+        theme: { color: "#1F5C52" }
+      };
+
+      if (orderId) {
+        options.order_id = orderId; // server-verified order — takes precedence over "amount" above
+      }
+
+      const rzp = new Razorpay(options);
+      rzp.on('payment.failed', function (response){
+        alert("Payment failed: " + (response.error && response.error.description ? response.error.description : 'please try again.'));
+        checkoutInProgress = false;
+        setButtonBusy(payButton, null);
+      });
+      rzp.open();
+      // Checkout is now visible in its own overlay — release the button lock
+      // once it's open so a dismissed/failed attempt (handled above) can retry.
+      setButtonBusy(payButton, null);
+    } catch (err){
+      console.error('Razorpay checkout failed to open:', err);
+      alert("Something went wrong opening the payment window. Please try again, or contact us on WhatsApp.");
+    } finally {
+      checkoutInProgress = false;
+      setButtonBusy(payButton, null);
+    }
   }
 
-  function payNow(productKey){
+  function payNow(productKey, buttonEl){
     const product = PRODUCTS[productKey];
     if (!product) return;
     openRazorpayCheckout({
       description: product.name,
       amountPaise: product.amountPaise,
-      notes: { product: product.name }
+      notes: { product: product.name },
+      payButton: buttonEl || null
     });
   }
 
@@ -852,7 +978,7 @@
     const reference = referenceEl.value.trim();
     const rupees = parseFloat(amountEl.value);
 
-    if (!rupees || rupees < 1) {
+    if (!rupees || !Number.isFinite(rupees) || rupees < 1) {
       hintEl.textContent = 'Enter a valid amount of ₹1 or more.';
       hintEl.classList.add('error');
       amountEl.focus();
