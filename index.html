@@ -257,6 +257,81 @@
   }
   .product-actions .btn{ padding:11px 18px; font-size:0.9rem; }
 
+  /* ---------- Custom / utility payment ---------- */
+  .pay-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-bottom:4px solid var(--teal);
+    padding:32px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px 24px;
+    max-width:720px;
+  }
+  .pay-field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .pay-field.full{ grid-column:1 / -1; }
+  .pay-field label{
+    font-size:0.85rem;
+    font-weight:600;
+    color:var(--ink-soft);
+  }
+  .pay-field select,
+  .pay-field input{
+    font-family:'Work Sans', sans-serif;
+    font-size:0.98rem;
+    padding:11px 12px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--bg);
+    color:var(--ink);
+  }
+  .pay-field select:focus,
+  .pay-field input:focus{
+    outline:none;
+    border-color:var(--teal);
+  }
+  .pay-amount-wrap{
+    display:flex;
+    align-items:stretch;
+  }
+  .pay-amount-wrap .currency{
+    display:flex;
+    align-items:center;
+    padding:0 12px;
+    border:1px solid var(--line);
+    border-right:none;
+    border-radius:var(--radius) 0 0 var(--radius);
+    background:var(--bg-alt);
+    color:var(--ink-soft);
+    font-weight:600;
+  }
+  .pay-amount-wrap input{
+    border-radius:0 var(--radius) var(--radius) 0;
+    flex:1;
+    min-width:0;
+  }
+  .pay-hint{
+    grid-column:1 / -1;
+    margin:0;
+    font-size:0.85rem;
+    max-width:none;
+    min-height:1.2em;
+  }
+  .pay-hint.error{ color:#B3261E; }
+  .pay-card .btn{ grid-column:1 / -1; justify-self:start; }
+  .pay-note{
+    margin-top:16px;
+    font-size:0.85rem;
+    max-width:60ch;
+  }
+  @media (max-width: 560px){
+    .pay-card{ grid-template-columns:1fr; padding:24px; }
+  }
+
   /* ---------- About ---------- */
   .about-grid{
     display:grid;
@@ -392,6 +467,7 @@
     <nav class="links" id="navLinks">
       <a href="#top">Home</a>
       <a href="#products">Beds</a>
+      <a href="#pay">Pay</a>
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -522,6 +598,50 @@
     </div>
   </section>
 
+  <!-- ================= CUSTOM / UTILITY PAYMENT ================= -->
+  <section class="section" id="pay">
+    <div class="container">
+      <div class="section-head">
+        <h2>Pay any amount</h2>
+        <p>For advances, balance dues, delivery charges or anything else agreed over call or WhatsApp — enter the amount and pay directly.</p>
+      </div>
+
+      <form class="pay-card" id="payForm" onsubmit="return false;">
+        <div class="pay-field">
+          <label for="payPurpose">What's this payment for</label>
+          <select id="payPurpose">
+            <option value="Advance payment">Advance payment</option>
+            <option value="Balance payment">Balance payment</option>
+            <option value="Delivery charge">Delivery charge</option>
+            <option value="Repair or service">Repair or service</option>
+            <option value="Custom order">Custom order</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="pay-field">
+          <label for="payReference">Name or order reference (optional)</label>
+          <input type="text" id="payReference" placeholder="e.g. Rahul, Queen bed order">
+        </div>
+
+        <div class="pay-field full">
+          <label for="payAmount">Amount to pay</label>
+          <div class="pay-amount-wrap">
+            <span class="currency">₹</span>
+            <input type="number" id="payAmount" inputmode="decimal" min="1" step="1" placeholder="Enter amount">
+          </div>
+        </div>
+
+        <p class="pay-hint" id="payHint"></p>
+
+        <button type="submit" class="btn btn-primary" onclick="payCustomAmount()">Pay this amount</button>
+      </form>
+
+      <!-- EDIT: this note explains the optional server-side order API — remove once ORDER_API_URL is set up, or delete this paragraph if you're staying with client-side-only payments -->
+      <p class="pay-note">Payments here work the same way as the bed payments above: they open Razorpay Checkout directly in the browser. If you set up <code>ORDER_API_URL</code> in the script (a small server endpoint that creates the Razorpay order first), this form — and the bed buttons — will automatically use it instead, which is the safer setup Razorpay recommends for verifying the exact amount charged.</p>
+    </div>
+  </section>
+
   <!-- ================= ABOUT ================= -->
   <section class="section" id="about">
     <div class="container about-grid">
@@ -596,6 +716,18 @@
     queen:  { name: "Queen Bed",  amountPaise: 2799900, displayPrice: "₹27,999" }  // EDIT
   };
 
+  // 4. Optional: server endpoint that creates a Razorpay order before checkout opens.
+  //    Leave this blank to keep the site fully client-side (as before) — the "Pay any
+  //    amount" form and the bed buttons will simply pass the amount straight to Razorpay
+  //    Checkout, same as this page always did.
+  //    If you set this up, the endpoint should accept a POST body of
+  //    { amount, currency, notes } and return JSON containing an "id" (the Razorpay
+  //    order id) created via the Razorpay Orders API using your KEY SECRET (never put
+  //    the key secret in this file). This lets Razorpay verify server-side that the
+  //    amount charged matches what you intended, which is the setup Razorpay recommends
+  //    for anything beyond quick testing.
+  const ORDER_API_URL = ""; // EDIT (optional) — e.g. "https://your-server.example.com/create-razorpay-order"
+
   /* =========================================================
      Page wiring — shouldn't need to touch this
      ========================================================= */
@@ -625,25 +757,53 @@
     menuToggle.setAttribute('aria-expanded', 'false');
   }));
 
-  function payNow(productKey){
-    const product = PRODUCTS[productKey];
-    if (!product) return;
+  // Asks ORDER_API_URL to create a Razorpay order server-side, if configured.
+  // Returns the order id, or null if no server is set up (or the call fails) —
+  // in which case checkout falls back to the plain client-side amount, exactly
+  // as this page behaved before.
+  async function createServerOrderId(amountPaise, notes){
+    if (!ORDER_API_URL) return null;
+    try {
+      const res = await fetch(ORDER_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: amountPaise, currency: 'INR', notes: notes || {} })
+      });
+      if (!res.ok) throw new Error('Order API responded with status ' + res.status);
+      const data = await res.json();
+      return data.id || data.order_id || null;
+    } catch (err){
+      console.error('Order API call failed, falling back to client-side amount:', err);
+      return null;
+    }
+  }
 
+  // Shared checkout opener used by both the bed "Pay online to book" buttons
+  // and the "Pay any amount" form below.
+  async function openRazorpayCheckout({ description, amountPaise, notes, payButton }){
     if (typeof Razorpay === 'undefined') {
       alert('Payment couldn\'t load. Check your internet connection and try again.');
       return;
     }
+    if (!amountPaise || amountPaise < 100) {
+      alert('Enter an amount of at least ₹1.');
+      return;
+    }
+
+    if (payButton) { payButton.disabled = true; payButton.dataset.origText = payButton.textContent; payButton.textContent = 'Opening payment…'; }
+    const orderId = await createServerOrderId(amountPaise, notes);
+    if (payButton) { payButton.disabled = false; payButton.textContent = payButton.dataset.origText; }
 
     const options = {
       key: RAZORPAY_KEY_ID,
-      amount: product.amountPaise,
+      amount: amountPaise,
       currency: "INR",
       name: SHOP.name,
-      description: product.name,
+      description: description,
       handler: function (response){
         alert(
           "Payment received. Payment ID: " + response.razorpay_payment_id +
-          "\n\nWe'll message you on WhatsApp shortly to confirm wood, size and delivery."
+          "\n\nWe'll message you on WhatsApp shortly to confirm the details."
         );
         // NOTE: this confirms the payment popup succeeded. To be fully sure funds
         // were captured before treating an order as confirmed, verify the payment
@@ -653,15 +813,63 @@
       modal: {
         ondismiss: function(){ /* user closed the payment window without paying */ }
       },
-      notes: { product: product.name },
+      notes: notes || {},
       theme: { color: "#1F5C52" }
     };
+
+    if (orderId) {
+      options.order_id = orderId; // server-verified order — takes precedence over "amount" above
+    }
 
     const rzp = new Razorpay(options);
     rzp.on('payment.failed', function (response){
       alert("Payment failed: " + response.error.description);
     });
     rzp.open();
+  }
+
+  function payNow(productKey){
+    const product = PRODUCTS[productKey];
+    if (!product) return;
+    openRazorpayCheckout({
+      description: product.name,
+      amountPaise: product.amountPaise,
+      notes: { product: product.name }
+    });
+  }
+
+  // "Pay any amount" form — lets the shop take a manually-entered amount
+  // (advance, balance due, delivery charge, custom order, etc.) instead of
+  // only the fixed bed prices above.
+  function payCustomAmount(){
+    const purposeEl = document.getElementById('payPurpose');
+    const referenceEl = document.getElementById('payReference');
+    const amountEl = document.getElementById('payAmount');
+    const hintEl = document.getElementById('payHint');
+    const payButton = document.querySelector('#payForm button[type="submit"]');
+
+    const purpose = purposeEl.value;
+    const reference = referenceEl.value.trim();
+    const rupees = parseFloat(amountEl.value);
+
+    if (!rupees || rupees < 1) {
+      hintEl.textContent = 'Enter a valid amount of ₹1 or more.';
+      hintEl.classList.add('error');
+      amountEl.focus();
+      return;
+    }
+    hintEl.textContent = '';
+    hintEl.classList.remove('error');
+
+    const amountPaise = Math.round(rupees * 100);
+    const description = reference ? (purpose + ' — ' + reference) : purpose;
+
+    openRazorpayCheckout({
+      description: description,
+      amountPaise: amountPaise,
+      notes: { purpose: purpose, reference: reference || '(none given)' },
+      payButton: payButton
+    });
   }
 </script>
 
